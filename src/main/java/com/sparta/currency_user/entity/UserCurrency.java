@@ -16,12 +16,13 @@ public class UserCurrency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @Column(name = "user_id")
+    private User user;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(name = "to_currency_id", nullable = false)
-    private Long currencyId;
+    @ManyToOne
+    @JoinColumn(name = "to_currency_id")
+    private Currency currency;
 
     @Column(name = "amount_in_krw", nullable = false)
     private Long fromAmount;
@@ -34,9 +35,10 @@ public class UserCurrency {
     private Status status;
 
     @Builder
-    public UserCurrency(Long currencyId, Long fromAmount,
+    public UserCurrency(User user, Currency currency, Long fromAmount,
                         Long toAmount, Status status){
-        this.currencyId = currencyId;
+        this.user = user;
+        this.currency = currency;
         this.fromAmount = fromAmount;
         this.toAmount = toAmount;
         this.status = status;
