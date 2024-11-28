@@ -7,11 +7,13 @@ import lombok.Getter;
 public class UserRequestDto {
     private String name;
     private String email;
+    private String password;
 
     public User toEntity() {
         return new User(
                 this.name,
-                this.email
+                this.email,
+                this.password
         );
     }
 }
