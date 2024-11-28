@@ -1,5 +1,6 @@
 package com.sparta.currency_user.controller;
 
+import com.sparta.currency_user.constants.AuthConstants;
 import com.sparta.currency_user.dto.CreateExchangeReqDto;
 import com.sparta.currency_user.dto.CreateExchangeResDto;
 import com.sparta.currency_user.dto.ReadExchangeResDto;
@@ -25,7 +26,7 @@ public class ExchangeController {
     @PostMapping
     public ResponseEntity<CreateExchangeResDto> createExchange(
             @RequestBody CreateExchangeReqDto dto,
-            @SessionAttribute("loginUser") User loginUser
+            @SessionAttribute(AuthConstants.LOGIN_USER) User loginUser
     ){
 
         CreateExchangeResDto resDto = exchangeService.createExchange(dto, loginUser);
@@ -36,7 +37,7 @@ public class ExchangeController {
     //환전 정보 조회
     @GetMapping
     public ResponseEntity<List<ReadExchangeResDto>> readExchanges(
-            @SessionAttribute("loginUser") User loginUser
+            @SessionAttribute(AuthConstants.LOGIN_USER) User loginUser
     ){
         List<ReadExchangeResDto> resDto = exchangeService.readExchanges(loginUser);
 
@@ -46,7 +47,7 @@ public class ExchangeController {
     //총 정보 조회
     @GetMapping("/total")
     public ResponseEntity<UserTotalInfo> readTotalExchangeInfo(
-            @SessionAttribute("loginUser") User loginUser
+            @SessionAttribute(AuthConstants.LOGIN_USER) User loginUser
     ){
          UserTotalInfo totalInfo = exchangeService.readTotalInfo(loginUser);
 
@@ -57,7 +58,7 @@ public class ExchangeController {
     @PatchMapping("/{exchangeId}")
     public ResponseEntity<Long> updateExchange(
             @PathVariable Long exchangeId,
-            @SessionAttribute("loginUser") User loginUser
+            @SessionAttribute(AuthConstants.LOGIN_USER) User loginUser
     ){
         Long id = exchangeService.updateExchange(exchangeId, loginUser);
 
