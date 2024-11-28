@@ -14,6 +14,6 @@ import java.util.List;
 public interface ExchangeRepository extends JpaRepository<UserCurrency, Long> {
     List<UserCurrency> findAllByUser(User user);
 
-    @Query("select new com.sparta.currency_user.dto.UserTotalInfo(COUNT(c.id), SUM(c.fromAmount)) from UserCurrency c WHERE c.user.id = :userId group by c.currency.currencyName")
+    @Query("select new com.sparta.currency_user.dto.UserTotalInfo(COUNT(c.id), SUM(c.fromAmount)) from UserCurrency c WHERE c.user.id = :userId group by c.currency.currencyCode")
     UserTotalInfo findTotalAmountAndCount(@Param("userId") Long userId);
 }

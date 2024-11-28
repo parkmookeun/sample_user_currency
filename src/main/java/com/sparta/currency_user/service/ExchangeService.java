@@ -7,7 +7,9 @@ import com.sparta.currency_user.dto.UserTotalInfo;
 import com.sparta.currency_user.entity.Currency;
 import com.sparta.currency_user.entity.User;
 import com.sparta.currency_user.entity.UserCurrency;
+import com.sparta.currency_user.entity.enums.CurrencyCode;
 import com.sparta.currency_user.entity.enums.Status;
+import com.sparta.currency_user.exception.CanNotExchangeException;
 import com.sparta.currency_user.exception.NoDataAccessAuthorization;
 import com.sparta.currency_user.exception.NoSuchExchangeInfoException;
 import com.sparta.currency_user.exception.NotChangedException;
@@ -30,15 +32,14 @@ public class ExchangeService {
 
     public CreateExchangeResDto createExchange(CreateExchangeReqDto dto, User loginUser) {
         //환전 요청 저장
-        String currencyName = dto.getCurrencyName();
         //저장할 화폐 정보 조회
-        Currency currency = currencyService.findCurrencyByName(currencyName);
+        Currency currency = currencyService.findByCurrencyCode(dto.getCurrencyCode());
 
         UserCurrency userCurrency = UserCurrency.builder()
                 .user(loginUser)
                 .currency(currency)
                 .fromAmount(dto.getMoney())
-                .toAmount(exchangeMoney(dto.getMoney(),currency.getExchangeRate()))
+                .toAmount(exchangeMoney(dto.getMoney(),currency.getExchangeRate(),currency.getCurrencyCode()))
                 .status(Status.NORMAL)
                 .build();
 
@@ -74,9 +75,21 @@ public class ExchangeService {
 
 
     //
-    private BigDecimal exchangeMoney(BigDecimal beforeExchange, BigDecimal exchangeRate){
+    private BigDecimal exchangeMoney(BigDecimal beforeExchange, BigDecimal exchangeRate, CurrencyCode code){
 
-        return beforeExchange.divide(exchangeRate,2,RoundingMode.HALF_UP);
+        switch (code){
+            case USD -> {
+                return beforeExchange.divide(exchangeRate,2,RoundingMode.HALF_UP);
+            }
+            case JPY -> {
+                return beforeExchange.divide(exchangeRate,0,RoundingMode.HALF_UP);
+            }
+            case EUR -> {
+                return beforeExchange.divide(exchangeRate,1,RoundingMode.HALF_UP);
+            }
+        }
+        //아무것도 해당이 안되면
+        throw new CanNotExchangeException("통화코드가 존재하지 않아, 환전할 수 없습니다!");
     }
 
     public UserTotalInfo readTotalInfo(User user) {

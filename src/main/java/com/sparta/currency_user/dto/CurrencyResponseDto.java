@@ -1,6 +1,7 @@
 package com.sparta.currency_user.dto;
 
 import com.sparta.currency_user.entity.Currency;
+import com.sparta.currency_user.entity.enums.CurrencyCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -8,21 +9,20 @@ import java.math.BigDecimal;
 @Getter
 public class CurrencyResponseDto {
     private Long id;
-
-    private String currencyName;
+    private CurrencyCode currencyCode;
     private BigDecimal exchangeRate;
     private String symbol;
 
     public CurrencyResponseDto(Currency currency) {
         this.id = currency.getId();
-        this.currencyName = currency.getCurrencyName();
+        this.currencyCode = currency.getCurrencyCode();
         this.exchangeRate = currency.getExchangeRate();
         this.symbol = currency.getSymbol();
     }
 
-    public CurrencyResponseDto(Long id, String currencyName, BigDecimal exchangeRate, String symbol) {
+    public CurrencyResponseDto(Long id, CurrencyCode currencyCode, BigDecimal exchangeRate, String symbol) {
         this.id = id;
-        this.currencyName = currencyName;
+        this.currencyCode = currencyCode;
         this.exchangeRate = exchangeRate;
         this.symbol = symbol;
     }
@@ -30,7 +30,7 @@ public class CurrencyResponseDto {
     public static CurrencyResponseDto toDto(Currency currency) {
         return new CurrencyResponseDto(
             currency.getId(),
-            currency.getCurrencyName(),
+            currency.getCurrencyCode(),
             currency.getExchangeRate(),
             currency.getSymbol()
         );

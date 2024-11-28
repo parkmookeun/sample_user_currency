@@ -3,6 +3,7 @@ package com.sparta.currency_user.service;
 import com.sparta.currency_user.dto.CurrencyRequestDto;
 import com.sparta.currency_user.dto.CurrencyResponseDto;
 import com.sparta.currency_user.entity.Currency;
+import com.sparta.currency_user.entity.enums.CurrencyCode;
 import com.sparta.currency_user.repository.CurrencyRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,9 @@ public class CurrencyService {
         return currencyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("통화를 찾을 수 없습니다."));
     }
 
-    public Currency findCurrencyByName(String name) {
-        return currencyRepository.findByCurrencyName(name).orElseThrow(() -> new IllegalArgumentException("통화를 찾을 수 없습니다."));
+    public Currency findByCurrencyCode(CurrencyCode code) {
+        log.info("코드로 통화 찾기: {}", code.toString());
+        return currencyRepository.findByCurrencyCode(code).orElseThrow(() -> new IllegalArgumentException("통화를 찾을 수 없습니다."));
     }
 
     public List<CurrencyResponseDto> findAll() {

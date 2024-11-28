@@ -1,6 +1,7 @@
 package com.sparta.currency_user.dto;
 
 import com.sparta.currency_user.entity.UserCurrency;
+import com.sparta.currency_user.entity.enums.CurrencyCode;
 import com.sparta.currency_user.entity.enums.Status;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CreateExchangeResDto {
     private String name;
-    private String currency;
+    private CurrencyCode currencyCode;
     private BigDecimal beforeExchange;
     private BigDecimal afterExchange;
     private Status status;
@@ -20,7 +21,7 @@ public class CreateExchangeResDto {
 
     public CreateExchangeResDto(UserCurrency userCurrency){
         this.name = userCurrency.getUser().getName();
-        this.currency = userCurrency.getCurrency().getCurrencyName();
+        this.currencyCode = userCurrency.getCurrency().getCurrencyCode();
         this.beforeExchange = userCurrency.getFromAmount();
         this.afterExchange = userCurrency.getToAmount();
         this.status = userCurrency.getStatus();
