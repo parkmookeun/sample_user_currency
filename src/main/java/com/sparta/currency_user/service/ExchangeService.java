@@ -3,6 +3,7 @@ package com.sparta.currency_user.service;
 import com.sparta.currency_user.dto.CreateExchangeReqDto;
 import com.sparta.currency_user.dto.CreateExchangeResDto;
 import com.sparta.currency_user.dto.ReadExchangeResDto;
+import com.sparta.currency_user.dto.UserTotalInfo;
 import com.sparta.currency_user.entity.Currency;
 import com.sparta.currency_user.entity.User;
 import com.sparta.currency_user.entity.UserCurrency;
@@ -19,7 +20,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -77,5 +77,14 @@ public class ExchangeService {
     private BigDecimal exchangeMoney(BigDecimal beforeExchange, BigDecimal exchangeRate){
 
         return beforeExchange.divide(exchangeRate,2,RoundingMode.HALF_UP);
+    }
+
+    public UserTotalInfo readTotalInfo(User user) {
+        List<UserCurrency> allByUser = exchangeRepository.findAllByUser(user);
+
+        if(allByUser.isEmpty()){
+            throw new NotChangedException(user.getName() + "의 총합 정보가 없습니다.");
+        }
+        return exchangeRepository.findTotalAmountAndCount(user.getId());
     }
 }
