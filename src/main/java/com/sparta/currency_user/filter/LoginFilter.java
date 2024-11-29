@@ -1,11 +1,13 @@
 package com.sparta.currency_user.filter;
 
 import com.sparta.currency_user.constants.AuthConstants;
-import com.sparta.currency_user.exception.NoDataAccessAuthorization;
+import com.sparta.currency_user.exception.code.ErrorCode;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
@@ -27,6 +29,8 @@ import java.io.IOException;
 
             // 다양한 기능을 사용하기 위해 다운 캐스팅
             HttpServletRequest httpRequest = (HttpServletRequest) request;
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+
             String requestURI = httpRequest.getRequestURI();
 
             log.info("로그인 필터 로직 실행");
@@ -41,7 +45,16 @@ import java.io.IOException;
 
                 // 로그인하지 않은 사용자인 경우
                 if (session == null || session.getAttribute(AuthConstants.LOGIN_USER) == null) {
-                    throw new NoDataAccessAuthorization("로그인 먼저 해주세요");
+                    httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                    httpResponse.setContentType("application/json");
+                    httpResponse.setCharacterEncoding("UTF-8");
+
+                    String json = String.format("""
+                            "error" : %s,
+                            "error_message" : %s
+                            """,ErrorCode.UNAUTHORIZED_ACCESS,ErrorCode.UNAUTHORIZED_ACCESS.getMessage());
+                    response.getWriter().write(json);
+                    return;
                 }
                 // 로그인 성공 로직
             }
@@ -49,7 +62,6 @@ import java.io.IOException;
             // 2번경우 : 필터 로직 통과 후 다음 필터 호출 chain.doFilter()
             // 다음 필터 없으면 Servlet -> Controller 호출
             chain.doFilter(request, response);
-
 
         }
 
