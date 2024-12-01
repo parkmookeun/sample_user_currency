@@ -57,7 +57,7 @@ public class ExchangeService {
     }
 
     @Transactional
-    public Long updateExchange(Long exchangeId, User loginUser) {
+    public Long cancelExchange(Long exchangeId, User loginUser) {
         UserCurrency userCurrency = exchangeRepository.findById(exchangeId).orElseThrow(
                 () -> new BaseException(ErrorCode.NOT_FOUND_EXCHANGES));
 

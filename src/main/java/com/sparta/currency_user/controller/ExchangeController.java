@@ -60,7 +60,7 @@ public class ExchangeController {
             @PathVariable Long exchangeId,
             @SessionAttribute(AuthConstants.LOGIN_USER) User loginUser
     ){
-        Long id = exchangeService.updateExchange(exchangeId, loginUser);
+        Long id = exchangeService.cancelExchange(exchangeId, loginUser);
 
         return new ResponseEntity<>(id,HttpStatus.OK);
     }

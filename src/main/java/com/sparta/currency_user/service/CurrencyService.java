@@ -18,7 +18,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class CurrencyService {
-    private static final BigDecimal borderValue = new BigDecimal("1000");
     private final CurrencyRepository currencyRepository;
 
     public CurrencyResponseDto findById(Long id) {
@@ -52,7 +51,7 @@ public class CurrencyService {
             BigDecimal exchangeRate = currency.getExchangeRate();
 
             // 환율이 null, 0 이하이거나, 범위를 벗어난 경우
-            if (exchangeRate == null || exchangeRate.compareTo(BigDecimal.ZERO) <= 0 || exchangeRate.compareTo(borderValue) > 0) {
+            if (exchangeRate == null || exchangeRate.compareTo(BigDecimal.ZERO) <= 0 || exchangeRate.compareTo(BigDecimal.valueOf(Long.parseLong(Currency.BORDER_VALUE))) > 0) {
                 log.info("환율값: {} 이 유효하지 않습니다.",exchangeRate);
                 // 예외를 던지거나 환율을 수정
                 throw new IllegalArgumentException("잘못된 환율 데이터: " + currency.getExchangeRate());
